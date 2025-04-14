@@ -1,13 +1,13 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException , Query
 from pydantic import BaseModel
-from typing import List
+from typing import Union
+app = FastAPI()
 
 class Banco(BaseModel):
     nome: str 
     cor:str 
-    ano_da_descoberta: int
+    ano_da_descoberta:Union[int, None]=None
 
-app = FastAPI()
 
 
 # Base de dados 
@@ -45,9 +45,9 @@ flores = {
    32: { "nome": "Lúpulo", "cor": "Verde", "ano da descoberta": 1500 }
 }
 
-# Lista de todos os itens dentro da API (Flores) /\⬆️
+# Lista de todos os itens dentro da API (Flores)⬆️
 @app.get("/")
-async def listar_flores():
+async def listas_flores():
     return flores
 
 # Procurar com ID
@@ -93,4 +93,11 @@ async def atualizar_flor(id:int, flor:Banco):
 
     return {"id":id, **flor.dict()}
 
-
+@app.get("/flores_test/")
+async def read_items(q: Union[str, None] = Query(default=None, max_length=50)):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
+# Make by Nicolas Vilela |\ |
+#                        | \|
