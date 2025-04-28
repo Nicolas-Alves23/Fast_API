@@ -1,6 +1,6 @@
-from fastapi import FastAPI, HTTPException , Query
-from pydantic import BaseModel
-from typing import Union
+from fastapi import FastAPI, HTTPException, Query, Path, Body
+from pydantic import BaseModel, Field
+from typing import Union, List, Annotated, Literal
 app = FastAPI()
 
 class Banco(BaseModel):
@@ -8,6 +8,9 @@ class Banco(BaseModel):
     cor:str 
     ano_da_descoberta:Union[int, None]=None
 
+class User(BaseModel):
+    username: str
+    full_name: Union[str, None] = None
 
 
 # Base de dados 
@@ -93,11 +96,85 @@ async def atualizar_flor(id:int, flor:Banco):
 
     return {"id":id, **flor.dict()}
 
+
+
+# =============== AULA 4 ================
+
 @app.get("/flores_test/")
 async def read_items(q: Union[str, None] = Query(default=None, max_length=50)):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
+    return results
+
+
+# teste recebendo uma lista de valores
+@app.get("/f/")
+async def read_items2(q:  Union[List[str], None] = Query(default=None)):
+    query_items ={"q": q}
+    return query_items
+
+# teste 2
+# ge = Maior ou igual
+# gt = Maior que
+# le = Menor que
+# lt = Menor ou igual
+@app.get("/florzinha/{flor_id}")
+async def read_flors3(*,flor_id: int = Path(title="The ID of the flor to get",ge=1 ,le=5), q: str):
+    results = {"flor_id": flor_id}
+    if q:
+        results.update({"q": q})
+    return results
+
+
+# teste 3
+class FilterParams(BaseModel):
+    limit: int = Field(100, gt=0, le=100)
+    offset: int = Field(0, ge=0)
+    order_by: Literal["created_at", "updated_at"] = "created_at"
+    tags: list[str] = []
+
+
+@app.get("/items/")
+async def read_items(filter_query: Annotated[FilterParams, Query()]):
+    return filter_query
+ 
+# =========================================================
+ 
+@app.put("/forca/{flor_id}")
+async def update_flor2(
+    *,
+    flor_id: int = Path(title="The ID of the flor to get", ge=0, le=1000),
+    q: str,
+    flor: Banco ,
+):
+    results = {"flor_id": flor_id}
+    if q:
+        results.update({"q": q})
+    if flor:
+        results.update({"flor": flor})
+    return results
+# ==============================================================
+@app.put("/items/{flor_id}")
+async def update_flor(flor_id: int, flor: Banco, user: User, importance: Annotated[int, Body()] = 0
+                      ):
+    results = {"flor_id": flor_id, "flor": flor, "user": user, "importance": importance}
+    return results
+# ==============================================
+
+
+class Item(BaseModel):
+    name: str
+    description: Union[str, None] = Field(
+        default=None, title="The description of the item", max_length=300
+    )
+    price: float = Field(gt=0, description="The price must be greater than zero")
+    tax: Union[float, None] = None
+
+
+@app.put("/itemsem/{item_id}")
+async def update_item(item_id: int, item: Annotated[Item, Body(embed=True)]):
+    results = {"item_id": item_id, "item": item}
     return results
 # Make by Nicolas Vilela |\ |
 #                        | \|
