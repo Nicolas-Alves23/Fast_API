@@ -1,6 +1,6 @@
-from fastapi import FastAPI, HTTPException, Query, Path, Body
-from pydantic import BaseModel, Field
-from typing import Union, List, Annotated, Literal
+from fastapi import FastAPI, HTTPException, Query, Path, Body 
+from pydantic import BaseModel, Field, HttpUrl
+from typing import Union, List, Annotated, Literal, Set
 app = FastAPI()
 
 class Banco(BaseModel):
@@ -176,5 +176,47 @@ class Item(BaseModel):
 async def update_item(item_id: int, item: Annotated[Item, Body(embed=True)]):
     results = {"item_id": item_id, "item": item}
     return results
+
+
+
+class Item2(BaseModel):
+    name: str
+    description: Union[str, None] = None
+    price: float
+    tax: Union[float, None] = None
+    tags: Set[str] = set()
+
+
+@app.put("/itemsi/{item_id}")
+async def update_item(item_id: int, item: Item2):
+    results = {"item_id": item_id, "item": item}
+    return results
+
+
+class Image(BaseModel):
+    url: HttpUrl
+    name: str
+
+
+class Item4(BaseModel):
+    name: str
+    description: Union[str, None] = None
+    price: float
+    tax: Union[float, None] = None
+    tags: Set[str] = set()
+    images: Union[List[Image], None] = None
+
+
+@app.put("/it/{item_id}")
+async def update_item(item_id: int, item: Item4):
+    results = {"item_id": item_id, "item": item}
+    return results
+
+
+
+
+
+
+
 # Make by Nicolas Vilela |\ |
 #                        | \|
