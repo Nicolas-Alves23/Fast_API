@@ -100,117 +100,117 @@ async def atualizar_flor(id:int, flor:Banco):
 
 # =============== AULA 4 ================
 
-@app.get("/flores_test/")
-async def read_items(q: Union[str, None] = Query(default=None, max_length=50)):
-    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
-    if q:
-        results.update({"q": q})
-    return results
+# @app.get("/flores_test/")
+# async def read_items(q: Union[str, None] = Query(default=None, max_length=50)):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
 
 
-# teste recebendo uma lista de valores
-@app.get("/f/")
-async def read_items2(q:  Union[List[str], None] = Query(default=None)):
-    query_items ={"q": q}
-    return query_items
+# # teste recebendo uma lista de valores
+# @app.get("/f/")
+# async def read_items2(q:  Union[List[str], None] = Query(default=None)):
+#     query_items ={"q": q}
+#     return query_items
 
-# teste 2
-# ge = Maior ou igual
-# gt = Maior que
-# le = Menor que
-# lt = Menor ou igual
-@app.get("/florzinha/{flor_id}")
-async def read_flors3(*,flor_id: int = Path(title="The ID of the flor to get",ge=1 ,le=5), q: str):
-    results = {"flor_id": flor_id}
-    if q:
-        results.update({"q": q})
-    return results
-
-
-# teste 3
-class FilterParams(BaseModel):
-    limit: int = Field(100, gt=0, le=100)
-    offset: int = Field(0, ge=0)
-    order_by: Literal["created_at", "updated_at"] = "created_at"
-    tags: list[str] = []
+# # teste 2
+# # ge = Maior ou igual
+# # gt = Maior que
+# # le = Menor que
+# # lt = Menor ou igual
+# @app.get("/florzinha/{flor_id}")
+# async def read_flors3(*,flor_id: int = Path(title="The ID of the flor to get",ge=1 ,le=5), q: str):
+#     results = {"flor_id": flor_id}
+#     if q:
+#         results.update({"q": q})
+#     return results
 
 
-@app.get("/items/")
-async def read_items(filter_query: Annotated[FilterParams, Query()]):
-    return filter_query
+# # teste 3
+# class FilterParams(BaseModel):
+#     limit: int = Field(100, gt=0, le=100)
+#     offset: int = Field(0, ge=0)
+#     order_by: Literal["created_at", "updated_at"] = "created_at"
+#     tags: list[str] = []
+
+
+# @app.get("/items/")
+# async def read_items(filter_query: Annotated[FilterParams, Query()]):
+#     return filter_query
  
-# =========================================================
+# # =========================================================
  
-@app.put("/forca/{flor_id}")
-async def update_flor2(
-    *,
-    flor_id: int = Path(title="The ID of the flor to get", ge=0, le=1000),
-    q: str,
-    flor: Banco ,
-):
-    results = {"flor_id": flor_id}
-    if q:
-        results.update({"q": q})
-    if flor:
-        results.update({"flor": flor})
-    return results
-# ==============================================================
-@app.put("/items/{flor_id}")
-async def update_flor(flor_id: int, flor: Banco, user: User, importance: Annotated[int, Body()] = 0
-                      ):
-    results = {"flor_id": flor_id, "flor": flor, "user": user, "importance": importance}
-    return results
-# ==============================================
+# @app.put("/forca/{flor_id}")
+# async def update_flor2(
+#     *,
+#     flor_id: int = Path(title="The ID of the flor to get", ge=0, le=1000),
+#     q: str,
+#     flor: Banco ,
+# ):
+#     results = {"flor_id": flor_id}
+#     if q:
+#         results.update({"q": q})
+#     if flor:
+#         results.update({"flor": flor})
+#     return results
+# # ==============================================================
+# @app.put("/items/{flor_id}")
+# async def update_flor(flor_id: int, flor: Banco, user: User, importance: Annotated[int, Body()] = 0
+#                       ):
+#     results = {"flor_id": flor_id, "flor": flor, "user": user, "importance": importance}
+#     return results
+# # ==============================================
 
 
-class Item(BaseModel):
-    name: str
-    description: Union[str, None] = Field(
-        default=None, title="The description of the item", max_length=300
-    )
-    price: float = Field(gt=0, description="The price must be greater than zero")
-    tax: Union[float, None] = None
+# class Item(BaseModel):
+#     name: str
+#     description: Union[str, None] = Field(
+#         default=None, title="The description of the item", max_length=300
+#     )
+#     price: float = Field(gt=0, description="The price must be greater than zero")
+#     tax: Union[float, None] = None
 
 
-@app.put("/itemsem/{item_id}")
-async def update_item(item_id: int, item: Annotated[Item, Body(embed=True)]):
-    results = {"item_id": item_id, "item": item}
-    return results
+# @app.put("/itemsem/{item_id}")
+# async def update_item(item_id: int, item: Annotated[Item, Body(embed=True)]):
+#     results = {"item_id": item_id, "item": item}
+#     return results
 
 
 
-class Item2(BaseModel):
-    name: str
-    description: Union[str, None] = None
-    price: float
-    tax: Union[float, None] = None
-    tags: Set[str] = set()
+# class Item2(BaseModel):
+#     name: str
+#     description: Union[str, None] = None
+#     price: float
+#     tax: Union[float, None] = None
+#     tags: Set[str] = set()
 
 
-@app.put("/itemsi/{item_id}")
-async def update_item(item_id: int, item: Item2):
-    results = {"item_id": item_id, "item": item}
-    return results
+# @app.put("/itemsi/{item_id}")
+# async def update_item(item_id: int, item: Item2):
+#     results = {"item_id": item_id, "item": item}
+#     return results
 
 
-class Image(BaseModel):
-    url: HttpUrl
-    name: str
+# class Image(BaseModel):
+#     url: HttpUrl
+#     name: str
 
 
-class Item4(BaseModel):
-    name: str
-    description: Union[str, None] = None
-    price: float
-    tax: Union[float, None] = None
-    tags: Set[str] = set()
-    images: Union[List[Image], None] = None
+# class Item4(BaseModel):
+#     name: str
+#     description: Union[str, None] = None
+#     price: float
+#     tax: Union[float, None] = None
+#     tags: Set[str] = set()
+#     images: Union[List[Image], None] = None
 
 
-@app.put("/it/{item_id}")
-async def update_item(item_id: int, item: Item4):
-    results = {"item_id": item_id, "item": item}
-    return results
+# @app.put("/it/{item_id}")
+# async def update_item(item_id: int, item: Item4):
+#     results = {"item_id": item_id, "item": item}
+#     return results
 
 
 
