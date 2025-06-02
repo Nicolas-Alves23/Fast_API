@@ -1,0 +1,2 @@
+from Models.profissao_model import ProfissaoModel
+from Models.local_model import LocalModel

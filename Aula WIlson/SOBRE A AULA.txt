@@ -1,0 +1,6 @@
+Aula sobre a manipulação de um banco de dados 
+
+api = mexer na api realmente 
+core = configuração padrão do projeto
+models = modelo do banco 
+schecmas = converter o banco para json
