@@ -79,37 +79,3 @@ async def delete_profissao(profissao_id: int, db: AsyncSession = Depends(get_ses
         else:
             raise HTTPException(detail="Profissão não encontrada", status_code=status.HTTP_404_NOT_FOUND)
 
-# @router.put("/{profissao_id}", response_model=ProfissaoModel,status_code=status.HTTP_202_ACCEPTED)
-# async def put_profissao(profissao_id: int, profissao: ProfissaoSchema, db: AsyncSession = Depends(get_session)):
-#     async with db as session:
-#         query = select(ProfissaoModel).filter(ProfissaoModel.id == profissao_id)
-#         result = await session.execute(query)
-#         profissao_up = result.scalar_one_or_none()
-        
-#         if profissao_up:
-#             profissao_up.nome =profissao.nome
-#             profissao_up.area =profissao.area
-#             profissao_up.formacao =profissao.formacao
-#             profissao_up.salario =profissao.salario
-#             profissao_up.foto =profissao.foto
-            
-#             await session.commit()
-#             return profissao_up
-        
-#         else:
-#             raise HTTPException(detail="Profissão não encontrada", status_code=status.HTTP_404_NOT_FOUND)
-    
-# @router.delete("/{profissao_id}", response_model=ProfissaoModel, status_code=status.HTTP_204_NO_CONTENT)
-# async def delete_profissao(profissao_id: int, db: AsyncSession = Depends(get_session)):
-#     async with db as session:
-#         query = select(ProfissaoModel).filter(ProfissaoModel.id == profissao_id)
-#         result = await session.execute(query)
-#         profissao_del = result.scalar_one_or_none()
-        
-#         if profissao_del:
-#             await session.delete(profissao_del)
-#             await session.commit()
-#             return Response(status_code=status.HTTP_204_NO_CONTENT)
-    
-#         else:
-#             raise HTTPException(detail="Profissão não encontrada", status_code=status.HTTP_404_NOT_FOUND)

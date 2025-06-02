@@ -4,4 +4,5 @@ from api.v1.endpoints import profissao
 
 api_router = APIRouter()
 
-api_router.include_router(profissao.router, prefix="/profissao", tags=["Prodissão"])
+api_router.include_router(profissao.router, prefix="/profissao", tags=["Profissão"])
+api_router.include_router(profissao.router, prefix="/profissao", tags=["Profissão"])
